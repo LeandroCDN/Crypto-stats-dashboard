@@ -31,3 +31,32 @@ body {
     text-wrap: balance;
   }
 }
+
+
+
+
+.border2 {
+  border-image: linear-gradient(to right, #3acfd5 0%, #3a4ed5 100%) 1;
+  border-width: 4px;
+  border-style: solid;
+  padding: 5px;
+  border-radius: 20px; /* this doesn't work */
+  
+}
+
+.gradient-border-mask {
+  position: relative;
+  /* padding: 1.3rem; */
+  backdrop-filter: blur(10px);
+}
+
+.gradient-border-mask::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  border: 5px solid transparent;
+  background: linear-gradient(140deg, red, orange) border-box;
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
