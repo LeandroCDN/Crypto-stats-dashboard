@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchMarketcap } from "@/app/utils/api";
+import axios from "axios";
+
 export default function MidSection() {
   const [marketcap, setMarketcap] = useState<number | null>(null);
   const [marketcapDaily, setMarketcapDaily] = useState<number | null>(null);
@@ -8,15 +10,24 @@ export default function MidSection() {
     number | null
   >(null);
 
+  useEffect(() => {
+    const getData = async () => {
+      const response = await axios.get("/api/cmc-data");
+      console.log("categories");
+      //console.log(response); // Aquí puedes manejar los datos según sea necesario
+      console.log(response.data); // Aquí puedes manejar los datos según sea necesario
+      return response.data;
+    };
+
+    getData();
+  }, []);
+
   const handleFetchMarketcap = async () => {
     try {
       const data = await fetchMarketcap();
 
       if (data) {
-        console.log(
-          "data.data.total_market_cap.usd",
-          data.data.total_market_cap.usd
-        ); /// number: 2160996389276.9094
+        /// number: 2160996389276.9094
         const number = parseFloat(data.data.total_market_cap.usd);
 
         // Truncar a 2 decimales en miles de millones

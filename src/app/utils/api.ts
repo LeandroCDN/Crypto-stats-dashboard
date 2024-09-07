@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 export const fetchTopMoversOne = async () => {
     const response = await fetch(
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=percent_change_24h_desc&per_page=100&page=1"
@@ -43,48 +45,29 @@ export const fetchFearAndGreed = async () => {
     return data;
 };
 
-/*
-export const fetchDailyCashFlow = async (ticker: string) => {
-    const baseUrl = "https://www.alphavantage.co/query";
-    const function_ = "CASH_FLOW";
-    const apiKey = "LWUY26WXHHTJIFK5"
-    const url = `${baseUrl}?function=${function_}&symbol=${ticker}&apikey=${apiKey}`;
-    
+
+export const fetchCMCData = async () => {
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        
-        if ("quarterlyReports" in data) {
-            const quarterlyReports = data.quarterlyReports;
-            
-            // Calcular el flujo de caja diario
-            const dailyCashFlows = quarterlyReports.map((report: any, index: number, array: any[]) => {
-                const endDate = new Date(report.fiscalDateEnding);
-                const startDate = index < array.length - 1 
-                    ? new Date(array[index + 1].fiscalDateEnding)
-                    : new Date(endDate.getFullYear() - 1, endDate.getMonth(), endDate.getDate());
-                
-                const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-                const dailyCashFlow = parseFloat(report.operatingCashflow) / days;
-                
-                return {
-                    fiscalDateEnding: report.fiscalDateEnding,
-                    operatingCashflow: parseFloat(report.operatingCashflow),
-                    dailyCashFlow: dailyCashFlow
-                };
-            });
-            
-            return dailyCashFlows;
-        } else {
-            console.error(`No se encontraron datos para ${ticker}`);
-            return null;
-        }
+        const response = await axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/categories', {
+            headers: {
+                'X-CMC_PRO_API_KEY': '584ad864-a952-49b1-85bb-2e49e1240084', // Reemplaza con tu API Key
+            },
+        });
+
+        // Los datos ya vienen en formato JSON
+        return response.data;
     } catch (error) {
-        console.error(`Error fetching data for ${ticker}:`, error);
-        return null;
+        console.error("Error fetching CoinMarketCap data:", error);
+        return {}; // Retornar un objeto vacío en caso de error
     }
 };
-*/
+
+export const fetchCryptoNews = async () => {
+    try {
+        const response = await axios.get('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
+        return response.data.Data; // Devuelve solo el array de noticias
+    } catch (error) {
+        console.error("Error fetching crypto news:", error);
+        return []; // Devuelve un array vacío en caso de error
+    }
+};

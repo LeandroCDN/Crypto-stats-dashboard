@@ -11,7 +11,7 @@ export default function TopSection() {
       try {
         const data = await fetchFearAndGreed();
         const latestIndex = data.data[0];
-        console.log(latestIndex);
+
         setFearAndGreed(latestIndex);
       } catch (error) {
         console.error("Failed to fetch Fear and Greed Index", error);
