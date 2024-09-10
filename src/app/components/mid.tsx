@@ -13,9 +13,9 @@ export default function MidSection() {
   useEffect(() => {
     const getData = async () => {
       const response = await axios.get("/api/cmc-data");
-      console.log("categories");
+      // console.log("categories");
       //console.log(response); // Aquí puedes manejar los datos según sea necesario
-      console.log(response.data); // Aquí puedes manejar los datos según sea necesario
+      // console.log(response.data); // Aquí puedes manejar los datos según sea necesario
       return response.data;
     };
 
@@ -38,7 +38,7 @@ export default function MidSection() {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
         });
-        console.log("formattedMarketCap", formattedMarketCap); // string: $2
+        // console.log("formattedMarketCap", formattedMarketCap); // string: $2
 
         setMarketcap(truncated);
         setMarketcapDaily(data.data.market_cap_change_percentage_24h_usd);
