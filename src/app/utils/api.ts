@@ -104,7 +104,6 @@ export const fetchETHETFFlows = async () => {
     return data.data; // Asumiendo que la estructura de los datos se mantiene igual
 };
 
-
 interface NewsItem {
     id: string;
     published_on: number;

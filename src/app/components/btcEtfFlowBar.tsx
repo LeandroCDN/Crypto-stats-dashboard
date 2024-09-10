@@ -1,12 +1,16 @@
 import React from "react";
 
-const BtcEtfFlowBar = ({ data }) => {
+const BtcEtfFlowBar = ({ data }: any) => {
   // Filtrar y procesar los datos
   const etfData = Object.entries(data)
-    .filter(
-      ([key, value]) => key !== "date" && key !== "total" && value.usd !== 0
-    )
-    .map(([key, value]) => ({ ticker: key, usd: value.usd }));
+    .filter(([key, value]) => {
+      const val = value as { usd: number };
+      return key !== "date" && key !== "total" && val.usd !== 0;
+    })
+    .map(([key, value]) => {
+      const val = value as { usd: number };
+      return { ticker: key, usd: val.usd };
+    });
 
   const totalUsd = data.total.usd;
 
