@@ -1,5 +1,5 @@
 const axios = require('axios');
-import { htmlToText } from 'html-to-text';
+// import { htmlToText } from 'html-to-text';
 
 export const fetchTopMoversOne = async () => {
     const response = await fetch(
