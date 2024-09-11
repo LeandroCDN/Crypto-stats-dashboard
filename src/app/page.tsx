@@ -1,7 +1,7 @@
 import MidSection from "./components/mid";
 import TopSection from "./components/top";
 import BotSection from "./components/bot";
-import CrudoSection from "./components/crudo";
+// import CrudoSection from "./components/crudo";
 
 export default function Home() {
   return (
@@ -10,9 +10,6 @@ export default function Home() {
         <TopSection />
         <MidSection />
         <BotSection />
-      </div>
-      <div className="mt-4">
-        <CrudoSection />
       </div>
     </main>
   );
