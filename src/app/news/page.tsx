@@ -1,4 +1,4 @@
-import CrudoSection from "../components/crudo";
+// import CrudoSection from "../components/crudo";
 import NewSection from "../components/news/NewSection";
 
 export default function Home() {
