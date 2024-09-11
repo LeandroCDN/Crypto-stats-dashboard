@@ -62,27 +62,31 @@ export const fetchCMCData = async () => {
     }
 };
 
-export const fetchCryptoNews = async () => {
-    let timecall = Date.now();
-    console.log("timecall: ", timecall);
+export const fetchCryptoNews = async (startTimestamp: number, endTimestamp: number) => {
+    let currentTimestamp = endTimestamp;
     let responses: any[] = [];
+
     try {
+        while (currentTimestamp > startTimestamp) {
+            const response = await axios.get(`https://min-api.cryptocompare.com/data/v2/news/?lTs=${currentTimestamp}`);
+            console.log("Api call");
+            // Filter out news items that are older than the start timestamp
+            const filteredData = response.data.Data.filter((item: any) => item.published_on >= startTimestamp);
 
-        while (timecall > Date.now() / 1000 - 24 * 60 * 60) {
-            const response = await axios.get(`https://min-api.cryptocompare.com/data/v2/news/?lTs=${timecall}`);
-            console.log("flag");
-            // Get last element of response
-            const lastElement = response.data.Data[response.data.Data.length - 1];
-            timecall = lastElement.published_on;
-            responses = [...responses, ...response.data.Data];
+            // Get the oldest timestamp from the current batch
+            const oldestTimestamp = filteredData[filteredData.length - 1]?.published_on;
 
+            // Update the currentTimestamp for the next iteration
+            currentTimestamp = oldestTimestamp ? oldestTimestamp - 1 : startTimestamp;
+
+            responses = [...responses, ...filteredData];
         }
 
-        console.log(responses.length);
-        return responses; // Devuelve solo el array de noticias
+        console.log(`Total news items fetched: ${responses.length}`);
+        return responses;
     } catch (error) {
         console.error("Error fetching crypto news:", error);
-        return []; // Devuelve un array vacío en caso de error
+        return [];
     }
 };
 
