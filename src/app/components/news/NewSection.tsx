@@ -7,6 +7,7 @@ import NewsComponent from "./NewsComponent";
 import SearchBar from "./SearchBar";
 import DateRangePicker from "./DateRangePicker";
 import { formatDateTime, getFirstFourSentences } from "./utils";
+import QualityFilter from "./QualityFilter";
 
 const ITEMS_PER_PAGE = 50;
 
@@ -22,6 +23,8 @@ export default function NewSection() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [availableQualities, setAvailableQualities] = useState<number[]>([]);
+  const [selectedQualities, setSelectedQualities] = useState<number[]>([]);
 
   useEffect(() => {
     const savedNews = localStorage.getItem("savedNews");
@@ -53,6 +56,7 @@ export default function NewSection() {
       isRead: false,
       isImportant: false,
       source_info: item.source_info,
+      quality: item.quality,
     }));
 
     const allNews = [...formattedNews];
@@ -63,9 +67,19 @@ export default function NewSection() {
     formattedNews.forEach((item: { tags: string }) => {
       item.tags.split("|").forEach((tag) => tagsSet.add(tag));
     });
+    const qualitiesSet = new Set<number>(allNews.map((item) => item.quality));
+    setAvailableQualities(Array.from(qualitiesSet).sort((a, b) => a - b));
     const tags = Array.from(tagsSet);
     setAllTags(tags);
     setCurrentPage(1);
+  };
+
+  const handleQualityChange = (quality: number) => {
+    setSelectedQualities((prev) =>
+      prev.includes(quality)
+        ? prev.filter((q) => q !== quality)
+        : [...prev, quality]
+    );
   };
 
   const handleDeleteNews = (id: string) => {
@@ -108,6 +122,11 @@ export default function NewSection() {
         searchTerm === "" ||
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.body.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter(
+      (item) =>
+        selectedQualities.length === 0 ||
+        selectedQualities.includes(item.quality)
     );
 
   const totalPages = Math.ceil(filteredNews.length / ITEMS_PER_PAGE);
@@ -235,6 +254,11 @@ export default function NewSection() {
           <div className="sticky top-0">
             <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
           </div>
+          <QualityFilter
+            qualities={availableQualities}
+            selectedQualities={selectedQualities}
+            onQualityChange={handleQualityChange}
+          />
           <button
             onClick={handleDownloadImportant}
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full mb-6 transition duration-300 ease-in-out transform hover:scale-105 sticky top-[55px]"

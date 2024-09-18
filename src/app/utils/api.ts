@@ -1,4 +1,5 @@
 const axios = require('axios');
+import { getQualityRating } from './newsQualityRatings';
 // import { htmlToText } from 'html-to-text';
 
 export const fetchTopMoversOne = async () => {
@@ -71,7 +72,11 @@ export const fetchCryptoNews = async (startTimestamp: number, endTimestamp: numb
             const response = await axios.get(`https://min-api.cryptocompare.com/data/v2/news/?lTs=${currentTimestamp}`);
             console.log("Api call");
             // Filter out news items that are older than the start timestamp
-            const filteredData = response.data.Data.filter((item: any) => item.published_on >= startTimestamp);
+            const filteredData = response.data.Data.filter((item: any) => item.published_on >= startTimestamp)
+                .map((item: any) => ({
+                    ...item,
+                    quality: getQualityRating(item.source_info.name)
+                }));
 
             // Get the oldest timestamp from the current batch
             const oldestTimestamp = filteredData[filteredData.length - 1]?.published_on;
