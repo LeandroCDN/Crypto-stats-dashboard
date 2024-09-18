@@ -1,4 +1,5 @@
 export interface NewsItem {
+  [x: string]: any;
   id: string;
   published_on: number;
   title: string;
