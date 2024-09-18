@@ -1,5 +1,4 @@
 export const newsQualityRatings: Record<string, number> = {
-    "AMB Crypto": 4,
     "Bitcoinist": 1,
     "CryptoInsider": 1,
     "Crypto Watch": 1,
@@ -56,7 +55,6 @@ export const newsQualityRatings: Record<string, number> = {
     "BitcoinSistemi": 3,
     "Finbold": 3,
     "Coinpaprika": 3,
-    "AMB Crypto": 3,
     "CryptoCompare": 3,
     "Crypto Daily": 3,
     "Cryptoast": 3,
