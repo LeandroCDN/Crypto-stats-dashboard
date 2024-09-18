@@ -7,7 +7,9 @@ export interface NewsItem {
   tags: string;
   isRead: boolean;
   isImportant: boolean;
-  source_info: {
-    name: string;
-  };
+  // source_info: {
+  //   name: string;
+  // };
+  // name: string;
+  quality: number;
 }
