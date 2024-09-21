@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchTopMoversThree, fetchBTCETFFlows } from "@/app/utils/api";
-// import BtcEtfFlowBar from "./btcEtfFlowBar";
-// import { fetchBTCETFFlows, } from "@/app/btc-etf-flows";
+import {
+  fetchTopMoversThree,
+  fetchBTCETFFlows,
+  fetchETHETFFlows,
+} from "@/app/utils/api";
 
 interface Crypto {
   id: string;
@@ -12,20 +14,65 @@ interface Crypto {
   price_change_percentage_24h: number;
 }
 
+interface ETFFlow {
+  [key: string]: {
+    usd: number;
+    [key: string]: any;
+  };
+}
+
 export default function BotSection() {
   const [topGainers, setTopGainers] = useState<Crypto[]>([]);
   const [topLosers, setTopLosers] = useState<Crypto[]>([]);
-  const [btcFlows, setBtcFlows] = useState();
+  const [btcFlows, setBtcFlows] = useState<ETFFlow | null>(null);
+  const [ethFlows, setEthFlows] = useState<ETFFlow | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchBTCETFFlows();
-        if (data && data.points && data.points.length > 0) {
-          setBtcFlows(data.points[2]);
-          console.log("bot.tsx data", data.points[2]);
+        const dataBTCETFF = await fetchBTCETFFlows();
+        const dataETHETFF = await fetchETHETFFlows();
+        if (
+          dataBTCETFF &&
+          dataBTCETFF.points &&
+          dataBTCETFF.points.length > 0
+        ) {
+          const abbreviations = {
+            CHINAAMC: "CAMC",
+            "BOSERA&HASHKEY": "B&H",
+          };
+
+          // Remove 'date' field and set the state
+          const processFlows = (flows) => {
+            const result = { ...flows };
+            Object.keys(result).forEach((key) => {
+              const newKey = abbreviations[key] || key; // Abbreviate if applicable
+              result[newKey] = { ...result[key] };
+              if (newKey !== key) delete result[key]; // Remove old key if abbreviated
+            });
+            return result;
+          };
+
+          // Process BTC and ETH flows
+          const btcFlowsWithoutDate = processFlows({
+            ...dataBTCETFF.points[2],
+          });
+          delete btcFlowsWithoutDate.date;
+          setBtcFlows(btcFlowsWithoutDate);
+
+          const ethFlowsWithoutDate = processFlows({
+            ...dataETHETFF.points[2],
+          });
+          delete ethFlowsWithoutDate.date;
+          setEthFlows(ethFlowsWithoutDate);
+
+          console.log("Processed BTC ETF Flows", btcFlowsWithoutDate);
+          console.log("Processed ETH ETF Flows", ethFlowsWithoutDate);
         } else {
-          console.error("Unexpected data structure received", data);
+          console.error(
+            "Unexpected dataBTCETFF structure received",
+            dataBTCETFF
+          );
         }
       } catch (error) {
         console.error("Failed to fetch BTC ETF Flows", error);
@@ -33,6 +80,67 @@ export default function BotSection() {
     };
     fetchData();
   }, []);
+
+  const renderTable = (flows: ETFFlow | null, title: string) => {
+    if (!flows) return null;
+
+    const formatToMillions = (value: number | null | undefined) => {
+      if (value === null || value === undefined) return "--";
+      return `${(value / 1_000_000).toFixed(1)}M`;
+    };
+
+    const reorderedFlows = Object.entries(flows).reduce((acc, [key, value]) => {
+      if (key === "total") {
+        return { ...acc, [key]: value }; // Add 'total' at the end
+      }
+      return { [key]: value, ...acc }; // Add all other keys first
+    }, {});
+
+    return (
+      <div className="mb-4">
+        <h3 className="text-sm font-bold mb-2">{title}</h3>{" "}
+        {/* Fuente más pequeña */}
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              {Object.keys(reorderedFlows).map((name) => (
+                <th
+                  key={name}
+                  className="border px-2 py-1 text-xs font-semibold"
+                >
+                  {" "}
+                  {/* Reduce el padding y tamaño de fuente */}
+                  {name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {Object.entries(flows).map(([name, data]) => (
+                <td key={name} className="border px-2 py-1 text-xs">
+                  {" "}
+                  {/* Reduce el padding y tamaño de fuente */}
+                  {data.usd != null ? (
+                    <span
+                      className={
+                        data.usd >= 0 ? "text-green-500" : "text-red-500"
+                      }
+                    >
+                      {data.usd >= 0 ? "+" : ""}
+                      {formatToMillions(data.usd)}
+                    </span>
+                  ) : (
+                    "--"
+                  )}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   const handleFetchTopMovers = async () => {
     try {
@@ -90,7 +198,14 @@ export default function BotSection() {
         </div>
       </div>
       <div className="gradient-border-mask rounded-xl w-3/5 p-5 bg-black bg-opacity-50">
-        <p> Esto hoy no</p>
+        <div>
+          {btcFlows
+            ? renderTable(btcFlows, "BTC ETF Flows")
+            : "Waiting for data..."}
+          {ethFlows
+            ? renderTable(ethFlows, "ETH ETF Flows")
+            : "Waiting for data..."}
+        </div>
       </div>
     </div>
   );

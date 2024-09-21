@@ -2,6 +2,27 @@ const axios = require('axios');
 import { getQualityRating } from './newsQualityRatings';
 // import { htmlToText } from 'html-to-text';
 
+const filterIds = [
+    "layer-1",
+    "centralized-exchange-token-cex",
+    "decentralized-finance-defi",
+    "meme-token",
+    "artificial-intelligence",
+    "infrastructure",
+    "layer-2",
+    "depin",
+    "gaming",
+    "decentralized-exchange",
+    "zero-knowledge-zk",
+    "real-world-assets-rwa",
+    "layer-0-l0",
+    "gmci-30-index",
+    "play-to-earn",
+    "metaverse",
+    "socialfi",
+    "wallets"
+];
+
 export const fetchTopMoversOne = async () => {
     const response = await fetch(
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=percent_change_24h_desc&per_page=100&page=1"
@@ -46,6 +67,18 @@ export const fetchFearAndGreed = async () => {
     const data = await response.json();
     return data;
 };
+export const sectorPerformance = async () => {
+    const response = await fetch("https://api.coingecko.com/api/v3/coins/categories");
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+
+    // Filtrar solo los elementos que coincidan con los ids especificados
+    const filteredData = data.filter((item: { id: string; }) => filterIds.includes(item.id));
+
+    return filteredData;
+}
 
 export const fetchCMCData = async () => {
     try {
@@ -70,7 +103,7 @@ export const fetchCryptoNews = async (startTimestamp: number, endTimestamp: numb
     try {
         while (currentTimestamp > startTimestamp) {
             const response = await axios.get(`https://min-api.cryptocompare.com/data/v2/news/?lTs=${currentTimestamp}`);
-            console.log("Api call");
+            // console.log("Api call");
             // Filter out news items that are older than the start timestamp
             const filteredData = response.data.Data.filter((item: any) => item.published_on >= startTimestamp)
                 .map((item: any) => ({
@@ -87,7 +120,7 @@ export const fetchCryptoNews = async (startTimestamp: number, endTimestamp: numb
             responses = [...responses, ...filteredData];
         }
 
-        console.log(`Total news items fetched: ${responses.length}`);
+        // console.log(`Total news items fetched: ${responses.length}`);
         return responses;
     } catch (error) {
         console.error("Error fetching crypto news:", error);

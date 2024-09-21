@@ -6,7 +6,7 @@ export async function GET() {
         const response = await axios.get('https://api.coinmarketcap.com/data-api/v3/etf/detail/netflow/list', {
             params: {
                 category: 'eth',
-                size: 1,
+                size: 5,
                 page: 1
             }
         });
