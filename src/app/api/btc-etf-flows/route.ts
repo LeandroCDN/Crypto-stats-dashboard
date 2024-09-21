@@ -6,7 +6,7 @@ export async function GET() {
     const response = await axios.get('https://api.coinmarketcap.com/data-api/v3/etf/detail/netflow/list', {
       params: {
         category: 'btc',
-        size: 1,
+        size: 10,
         page: 1
       }
     });

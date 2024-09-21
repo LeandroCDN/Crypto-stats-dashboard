@@ -18,12 +18,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: linear-gradient(125deg, #641633, #550089);
 }
 
 @layer utilities {
@@ -54,9 +49,9 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 15px;
-  border: 5px solid transparent;
-  background: linear-gradient(140deg, red, orange) border-box;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: linear-gradient(90deg, #fa9574,#ca2562, #fa9574) border-box;
   mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
 }

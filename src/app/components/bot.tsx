@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchTopMoversThree, fetchBTCETFFlows } from "@/app/utils/api";
-import BtcEtfFlowBar from "./btcEtfFlowBar";
+// import BtcEtfFlowBar from "./btcEtfFlowBar";
 // import { fetchBTCETFFlows, } from "@/app/btc-etf-flows";
 
 interface Crypto {
@@ -22,8 +22,8 @@ export default function BotSection() {
       try {
         const data = await fetchBTCETFFlows();
         if (data && data.points && data.points.length > 0) {
-          setBtcFlows(data.points[0]);
-          console.log("bot.tsx data", data.points[0]);
+          setBtcFlows(data.points[2]);
+          console.log("bot.tsx data", data.points[2]);
         } else {
           console.error("Unexpected data structure received", data);
         }
@@ -69,7 +69,7 @@ export default function BotSection() {
   return (
     <div className="flex flex-row w-full h-1/3">
       <div
-        className="border-1 border-zinc-50 rounded-xl w-2/5 mr-1 flex flex-row justify-evenly"
+        className="border-1 border-zinc-50 rounded-xl w-2/5 mr-1.5 flex flex-row justify-evenly gradient-border-mask bg-black bg-opacity-50"
         onClick={handleFetchTopMovers} // Aquí agregamos el manejador de eventos
       >
         <div className="w-1/2 p-2">
@@ -89,8 +89,8 @@ export default function BotSection() {
           )}
         </div>
       </div>
-      <div className="gradient-border-mask rounded-xl w-3/5 p-5">
-        {btcFlows && <BtcEtfFlowBar data={btcFlows} />}
+      <div className="gradient-border-mask rounded-xl w-3/5 p-5 bg-black bg-opacity-50">
+        <p> Esto hoy no</p>
       </div>
     </div>
   );

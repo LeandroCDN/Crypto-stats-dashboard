@@ -22,12 +22,12 @@ export default function TopSection() {
   }, []);
 
   return (
-    <div className="flex flex-row w-full h-1/3 mb-1">
-      <div className="flex flex-col w-2/5 h-full mr-1">
-        <div className="gradient-border-mask rounded-xl h-2/5 mb-1">
+    <div className="flex flex-row w-full h-1/3 mb-1.5">
+      <div className="flex flex-col w-2/5 h-full mr-1.5">
+        <div className="gradient-border-mask rounded-xl h-2/5 mb-1.5 bg-black bg-opacity-50">
           <h1>LAB REPORT</h1>
         </div>
-        <div className="gradient-border-mask rounded-xl h-3/5 flex flex-row justify-between items-center">
+        <div className="gradient-border-mask rounded-xl h-3/5 flex flex-row justify-between items-center bg-black bg-opacity-50">
           <div className="flex flex-col">
             <div>
               <p className="text-3xl">FEAR AND GREED INDEX:</p>
@@ -47,7 +47,7 @@ export default function TopSection() {
           </div>
         </div>
       </div>
-      <div className="gradient-border-mask rounded-xl w-3/5">
+      <div className="gradient-border-mask rounded-xl w-3/5 bg-black bg-opacity-50">
         {" "}
         Este hoy no - 7D Twitter Crypto Discussion
       </div>

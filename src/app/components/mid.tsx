@@ -14,7 +14,7 @@ export default function MidSection() {
     const getData = async () => {
       const response = await axios.get("/api/cmc-data");
       // console.log("categories");
-      //console.log(response); // Aquí puedes manejar los datos según sea necesario
+      console.log(response); // Aquí puedes manejar los datos según sea necesario
       // console.log(response.data); // Aquí puedes manejar los datos según sea necesario
       return response.data;
     };
@@ -50,13 +50,13 @@ export default function MidSection() {
   };
 
   return (
-    <div className="flex flex-row w-full h-1/3 mb-1">
-      <div className="gradient-border-mask rounded-xl w-3/5 mr-1">
+    <div className="flex flex-row w-full h-1/3 mb-1.5">
+      <div className="gradient-border-mask rounded-xl w-3/5 mr-1.5 bg-black bg-opacity-50">
         {" "}
         Este hoy no - Sector performance
       </div>
       <div
-        className="gradient-border-mask rounded-xl w-2/5 flex flex-col items-center justify-evenly"
+        className="gradient-border-mask rounded-xl w-2/5 flex flex-col items-center justify-evenly bg-black bg-opacity-50"
         onClick={handleFetchMarketcap}
       >
         <h3 className="text-3xl mb-2">Total Crypto Marketcap</h3>
