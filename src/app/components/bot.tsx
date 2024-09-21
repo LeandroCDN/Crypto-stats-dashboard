@@ -37,13 +37,13 @@ export default function BotSection() {
           dataBTCETFF.points &&
           dataBTCETFF.points.length > 0
         ) {
-          const abbreviations = {
+          const abbreviations: { [key: string]: string } = {
             CHINAAMC: "CAMC",
             "BOSERA&HASHKEY": "B&H",
           };
 
           // Remove 'date' field and set the state
-          const processFlows = (flows) => {
+          const processFlows = (flows: any) => {
             const result = { ...flows };
             Object.keys(result).forEach((key) => {
               const newKey = abbreviations[key] || key; // Abbreviate if applicable
